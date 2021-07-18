@@ -1,0 +1,71 @@
+﻿@model PagedList.IPagedList<Tuhoc.Models.Book>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "Books", FormMethod.Get))
+{
+    <p>
+        Search Name: @Html.TextBox("Search_Data", ViewBag.FilterValue as string)
+        <input type="submit" value="Find" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Tiêu đề", "Index", new { Sorting_Order = ViewBag.Sorting_Name, Filter_Values = ViewBag.FilterValues })
+        </th>
+        <th>
+            @Html.ActionLink("Tacgs gia", "Index", new { Sorting_Order = ViewBag.Sorting_Author, Filter_Values = ViewBag.FilterValues })
+        </th>
+        <th>
+            @Html.ActionLink("NXB", "Index", new { Sorting_Order = ViewBag.Sorting_Publisher, Filter_Values = ViewBag.FilterValues })
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Year)*@
+            nam xuat ban
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Description)*@
+            tom tat
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.BookName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Author)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Publisher)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, PageNo => Url.Action("Index",
+    new { PageNo, Sorting_Order = ViewBag.CurrentSort_Order, Filter_Values = ViewBag.FilterValues }))
